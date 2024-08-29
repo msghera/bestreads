@@ -47,7 +47,7 @@ const Newsfeed = () => {
       {reviews.map((review) => (
         <div key={review.id} className="review-card">
           <div className="review-header">
-            <h3 className="review-username">{review.username}</h3>
+            <i><p className="review-username">{review.user} posted a review</p></i>
             <p className="review-book"><strong>Book:</strong> {review.book_name}</p>
           </div>
           <p className="review-text">{review.review_text}</p>
