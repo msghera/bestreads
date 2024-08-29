@@ -39,7 +39,7 @@ const Newsfeed = () => {
   }, [navigate]);
 
   const handleCommentClick = (reviewId) => {
-    window.open(`/comments/${reviewId}`, '_blank');
+    window.location.href = `/comments/${reviewId}`;
   };
 
   return (

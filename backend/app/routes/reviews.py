@@ -99,11 +99,23 @@ def add_comment(review_id):
 @reviews.route('/<int:review_id>/comments', methods=['GET'])
 def get_comments(review_id):
     review = Review.query.get_or_404(review_id)
-    comments = Comment.query.filter_by(review_id=review_id).all()
+    comments = review.comments
     comments_list = [{
         'id': comment.id,
         'comment_text': comment.comment_text,
-        'user_id': comment.user_id
+        'user': comment.user.username
     } for comment in comments]
 
-    return jsonify({'comments': comments_list}), 200
+    response = {
+        'review': {
+            'id': review.id,
+            'book_name': review.book_name,
+            'isbn': review.isbn,
+            'author_name': review.author_name,
+            'review_text': review.review_text,
+            'user': review.user.username
+        },
+        'comments': comments_list
+    }
+
+    return jsonify(response), 200

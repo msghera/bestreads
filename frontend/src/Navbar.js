@@ -10,14 +10,31 @@ const Navbar = () => {
     navigate('/auth/login');
   };
 
+  const handleGoToNewsfeed = () => {
+    navigate('/newsfeed');
+  };
+
+  const handleGoToPeople = () => {
+    navigate('/people');
+  };
+
+  const isLoggedIn = !!localStorage.getItem('token');
+
+
   return (
     <nav className="navbar">
-      <div className="navbar-brand">
+      <div className="navbar-brand" onClick={handleGoToNewsfeed}>
         <h1>Bestreads</h1>
       </div>
-      <div className="navbar-right">
-        <button onClick={handleLogout} className="logout-button">Logout</button>
-      </div>
+      {isLoggedIn && <div className="navbar-buttons">
+          <button onClick={handleGoToNewsfeed} className="nav-button">Reviews</button>
+          <button onClick={handleGoToPeople} className="nav-button">People</button>
+        </div>
+      }
+      {isLoggedIn && <div className="navbar-right">
+          <button onClick={handleLogout} className="logout-button">Logout</button>
+        </div>
+      }
     </nav>
   );
 };

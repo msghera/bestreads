@@ -1,26 +1,69 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import './Auth.css';
 
-const Register = ({ history }) => {
+const Register = () => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/register`, { email, password });
-      history.push('/login');
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/auth/register`, {
+        username,
+        email,
+        password,
+      });
+      if (response.status === 200) {
+        navigate('/auth/login');
+      } else {
+        console.error('Registration failed:', response.data);
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Error during registration:', error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
-      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
-      <button type="submit">Register</button>
-    </form>
+    <div className="auth-container">
+      <h2>Register</h2>
+      <form onSubmit={handleRegister}>
+        <div className="form-group">
+          <label htmlFor="username">Username:</label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" className="auth-button">Register</button>
+      </form>
+    </div>
   );
 };
 
