@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import './Comment.css';
 
 const Comment = () => {
   const { reviewId } = useParams();
@@ -9,8 +10,6 @@ const Comment = () => {
   const [newComment, setNewComment] = useState('');
 
   useEffect(() => {
-
-    // Fetch comments for the review
     const fetchComments = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/reviews/${reviewId}/comments`);
@@ -31,12 +30,11 @@ const Comment = () => {
   const handlePostComment = async () => {
     try {
       const token = localStorage.getItem('token'); 
-
       const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/reviews/${reviewId}/comments`, {
         comment_text: newComment,
       },{
         headers: {
-          Authorization: `Bearer ${token}`, // Include the Authorization header
+          Authorization: `Bearer ${token}`,
         },
       });
       setComments([...comments, response.data.comment]);
@@ -47,38 +45,37 @@ const Comment = () => {
   };
 
   return (
-    <div>
+    <div className="comment-container">
       {review && (
-        <div className="newsfeed-container">
-          <div key={review.id} className="review-card">
-            <div className="review-header">
-              <i>
-                <p className="review-username">{review.user} posted a review</p>
-              </i>
-              <p className="review-book">
-                <strong>Book:</strong> {review.book_name}
-              </p>
-            </div>
-            <p className="review-text">{review.review_text}</p>
+        <div key={review.id} className="review-card">
+          <div className="review-header">
+            <i>
+              <p className="review-username">{review.user} posted a review</p>
+            </i>
+            <p className="review-book">
+              <strong>Book:</strong> {review.book_name}
+            </p>
           </div>
+          <p className="review-text">{review.review_text}</p>
         </div>
       )}
-
-      <h2>Comments</h2>
-      <ul>
-        {comments.map((comment) => (
-          <li key={comment.id}>
-            {comment.comment_text} - <em>{comment.user}</em>
-          </li>
-        ))}
-      </ul>
-      <div>
-        <textarea
-          value={newComment}
-          onChange={handleNewCommentChange}
-          placeholder="Write a comment..."
-        />
-        <button onClick={handlePostComment}>Post Comment</button>
+      <div className="comments-section">
+        <h2>Comments</h2>
+        <ul className="comment-list">
+          {comments.map((comment) => (
+            <li key={comment.id} className="comment-item">
+              <span className="username">{comment.user}</span>: {comment.comment_text}
+            </li>
+          ))}
+        </ul>
+        <div className="comment-form">
+          <textarea
+            value={newComment}
+            onChange={handleNewCommentChange}
+            placeholder="Write a comment..."
+          />
+          <button onClick={handlePostComment}>Post Comment</button>
+        </div>
       </div>
     </div>
   );
