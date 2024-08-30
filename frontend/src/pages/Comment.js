@@ -12,7 +12,13 @@ const Comment = () => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/reviews/${reviewId}/comments`);
+        const token = localStorage.getItem('token');
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/reviews/${reviewId}/comments`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setReview(response.data.review);
         setComments(response.data.comments);
       } catch (error) {
@@ -29,16 +35,18 @@ const Comment = () => {
 
   const handlePostComment = async () => {
     try {
-      const token = localStorage.getItem('token'); 
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/reviews/${reviewId}/comments`, {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/reviews/${reviewId}/comments`, {
         comment_text: newComment,
-      },{
+      }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       setComments([...comments, response.data.comment]);
       setNewComment('');
+      window.location.reload(); // Reload the page after posting a comment
     } catch (error) {
       console.error('Error posting comment:', error);
     }

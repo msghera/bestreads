@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from app import db
-from app.models import Review, Comment
+from app.models import Review, Comment, Follow
 
 reviews = Blueprint('reviews', __name__)
 
@@ -41,6 +41,7 @@ def create_review():
 
 
 @reviews.route('/<int:review_id>', methods=['GET'])
+@jwt_required()
 def get_review(review_id):
     review = Review.query.get_or_404(review_id)
     return jsonify({
@@ -54,8 +55,16 @@ def get_review(review_id):
 
 
 @reviews.route('/', methods=['GET'])
+@jwt_required()
 def get_all_reviews():
-    reviews = Review.query.all()
+    current_user_id = get_jwt_identity()
+
+    followed_user_ids = db.session.query(Follow.followed_id).filter_by(follower_id=current_user_id).all()
+    followed_user_ids = {f[0] for f in followed_user_ids}
+    followed_user_ids.add(current_user_id)
+
+    reviews = Review.query.filter(Review.user_id.in_(followed_user_ids)).all()
+
     reviews_list = [{
         'id': review.id,
         'book_name': review.book_name,
@@ -97,6 +106,7 @@ def add_comment(review_id):
 
 
 @reviews.route('/<int:review_id>/comments', methods=['GET'])
+@jwt_required()
 def get_comments(review_id):
     review = Review.query.get_or_404(review_id)
     comments = review.comments

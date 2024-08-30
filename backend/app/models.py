@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from app import bcrypt
 from app import db
 
@@ -39,3 +41,16 @@ class Comment(db.Model):
 
     def __repr__(self):
         return f'<Comment {self.id} on Review {self.review_id}>'
+
+
+class Follow(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    follower_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    followed_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    follower = db.relationship('User', foreign_keys=[follower_id], backref='following')
+    followed = db.relationship('User', foreign_keys=[followed_id], backref='followers')
+
+    def __repr__(self):
+        return f'<Follow {self.follower_id} -> {self.followed_id}>'

@@ -26,6 +26,10 @@ const Login = () => {
     }
   };
 
+  const handleRegisterRedirect = () => {
+    navigate('/auth/register');
+  };
+
   return (
     <div className="auth-container">
       <h2>Login</h2>
@@ -52,6 +56,9 @@ const Login = () => {
         </div>
         <button type="submit" className="auth-button">Login</button>
       </form>
+      <p className="register-text" onClick={handleRegisterRedirect}>
+        Don't have an account? <span>Create one.</span>
+      </p>
     </div>
   );
 };

@@ -17,7 +17,7 @@ const Register = () => {
         email,
         password,
       });
-      if (response.status === 200) {
+      if (response.status === 201) {
         navigate('/auth/login');
       } else {
         console.error('Registration failed:', response.data);
@@ -63,6 +63,9 @@ const Register = () => {
         </div>
         <button type="submit" className="auth-button">Register</button>
       </form>
+      <div className="auth-footer">
+        <p className="login-text">Do you have an account? <span onClick={() => navigate('/auth/login')}>Login.</span></p>
+      </div>
     </div>
   );
 };

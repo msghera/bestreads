@@ -17,10 +17,11 @@ def create_app():
     bcrypt.init_app(app)
     jwt.init_app(app)
 
-    from app.routes import auth, reviews
+    from app.routes import auth, reviews, people
 
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(reviews, url_prefix='/reviews')
+    app.register_blueprint(people, url_prefix='/people')
 
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
 

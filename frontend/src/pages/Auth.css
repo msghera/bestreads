@@ -47,3 +47,14 @@
 .auth-button:hover {
   background-color: #0056b3;
 }
+
+.register-text, .login-text {
+  margin-top: 15px;
+  font-style: italic;
+  color: blue;
+  cursor: pointer;
+}
+
+.register-text span, .login-text span {
+  text-decoration: underline;
+}

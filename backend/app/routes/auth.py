@@ -50,18 +50,3 @@ def protected():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
     return jsonify({'message': f'Hello, {user.username}! This is a protected route.'})
-
-
-@auth.route('/people', methods=['GET'])
-@jwt_required()
-def get_users():
-    current_user_id = get_jwt_identity()
-    users = User.query.filter(User.id != current_user_id).all()
-
-    users_list = [{
-        'id': user.id,
-        'username': user.username,
-        'email': user.email
-    } for user in users]
-
-    return jsonify({'people': users_list}), 200
